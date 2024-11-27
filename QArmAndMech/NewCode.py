@@ -40,6 +40,8 @@ def platform():
     pick_up_luggage()
     # Rotate the base towards the platform (tweak this)
     arm.rotate_base(70)
+    # lower the elbow slightly so the luggage is dropped lightly
+    arm.rotate_elbow(7)
     arm.control_gripper(-45)
 
     time.sleep(0.5)
