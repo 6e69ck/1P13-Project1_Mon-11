@@ -170,66 +170,100 @@ def layover(plane_list, passenger_list): #Karl Matta
     # Return the two lists as a tuple
     return passenger_layover_list, plane_layover_list
 
-def graphical_Mon11(oversold, overweight, layover):
-    '''Accepts 2-D lists oversold, overweight, layover and time delay. Displays flight and passenger 
-    information organized by flight model. '''
+
+def graph_mon_11(oversold, overweight, layover):
+    """
+    Accepts 2-D lists oversold, overweight, layover and time delay. Displays flight and passenger
+    information organized by flight model.
+    """
+    # Initialize turtle
     turtle.setup(1000, 450)
     t = turtle.Turtle()
     screen = turtle.Screen()
+    # instant render
+    screen.tracer(0)
+    # starting offset for pattern
     x = -450
     t.pu()
-    
-    for os_b in oversold[0]: # oversold business list
+
+    # Since all data lists have the [0] item as the model
+    # Use the first item list (oversold business) to index the models
+    for oversold_business in oversold[0]:
+        # For each model draw a box
         t.goto(x,60)
         t.color("lightpink")
         t.begin_fill()
         t.pd()
-		# Draw background square
+
+        # Draw background square
         for i in range (4):
             t.forward(120)
             t.right(90)
         t.end_fill()
-        # draws header rectangle
+
+        # DRAW HEADER RECTANGLE
         t.color("lightblue")
         t.pu()
+        t.goto(x, 60)
         t.begin_fill()
-        t.forward(120)
+        # 121 instead of 120 to combat pixel errors (turtle problem)
+        t.forward(121)
         t.right(90)
         t.forward(25)
         t.right(90)
-        t.forward(120)
+        t.forward(121)
         t.right(90)
         t.forward(25)
         t.right(90)
         t.end_fill()
+        # Rectangle DONE
+
+        # Start printing data into box
         t.color("black")
         t.goto(x+60,40)
         # Writes flight model in header
-        t.write(os_b[0], align = 'center')
-        
+        t.write(oversold_business[0], align = 'center')
+
+
         t.goto(x+60,20)
-        t.write(f"Oversold business:{os_b[1]}", align = 'center') # oversold business seats
-        for os_e in oversold[1]: # oversold economy list
-            if os_e[0] == os_b[0]:
+        # oversold business seats
+        t.write(f"Oversold business:{oversold_business[1]}", align = 'center')
+
+        # Start adding the rest of the data
+        # Add oversold eco
+        current_model = oversold_business[0]
+        for oversold_economy in oversold[1]:
+            # Find the data corresponding to the current model
+            if oversold_economy[0] == oversold_business[0]:
+                # write the data into the box
                 t.goto(x+60,0)
-                t.write(f"Oversold economy:{os_e[1]}", align = 'center') # oversold economy seats
+                t.write(f"Oversold economy:{oversold_economy[1]}", align = 'center') # oversold economy seats
+
+        # Find the overweight data for the current plane
         for overweight_list in overweight[0]: # plane overweight list
-            if overweight_list[0] == os_b[0]:
+            # Find current model
+            if overweight_list[0] == current_model:
+                # write the data into the box
                 t.goto(x+60,-20)
-                t.write(f"Overweight bags:{overweight_list[1]}", align = 'center') 
+                t.write(f"Overweight bags:{overweight_list[1]}", align = 'center')
+        # Find the layover data for the current plane
         for layover_list in layover[1]: # plane layover list
-            if layover_list[0] == os_b[0]:
+            if layover_list[0] == current_model:
+                # write the data into the box
                 t.goto(x+60,-40)
                 t.write(f"Late Layover:{layover_list[1]}", align = 'center') # amount of passengers that have late layover
-        # x-coordinate for next rectangle
+        # Increase the accumulator to draw next rectangle moved to the right
         x += 130
+
     t.hideturtle()
+    # Render the drawing
+    screen.update()
     screen.exitonclick()
     turtle.done()
 
-# Main code
-Daily_data = daily_data(passenger_data())
-Oversold = oversold(fleet_data(), Daily_data)
-Overweight = overweight(fleet_data(), passenger_data())
-Layover = layover(fleet_data(), passenger_data())
-graphical_Mon11(Oversold,Overweight,Layover)
+if __name__ == "__main__":
+    d_data = daily_data(passenger_data())
+    oversold_data = oversold(fleet_data(), d_data)
+    overweight_data = overweight(fleet_data(), passenger_data())
+    layover_data = layover(fleet_data(), passenger_data())
+    graph_mon_11(oversold_data, overweight_data, layover_data)

@@ -1,7 +1,7 @@
 def fleet_data():
     '''Reads fleet data file. Returns 2-D list with fleet data'''
     f_data = []
-    with open("fleet_data.txt", 'r') as file:
+    with open("../fleet_data.txt", 'r') as file:
         for line in file:
             data = line.strip().split(',')
             # changes certain items from str to int 

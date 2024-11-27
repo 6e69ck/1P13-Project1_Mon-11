@@ -1,6 +1,6 @@
 def passenger_data():
     '''Reads passenger data file. Returns 2-D list containing passenger data.'''
-    file = open("passenger_data_v2.txt", "r")
+    file = open("../passenger_data_v2.txt", "r")
     passenger_data = []
     for line in file:
         line = line.split(",")
